@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warner Bros. | A Century of Bold Storytelling</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <title>Warner Bros. | Partnership Portal</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap');
         body { background-color: #07070c; color: #eee8de; margin: 0; font-family: 'Inter', sans-serif; }
+        .gold-text { font-family: 'Playfair Display', serif; color: #C8A84B; }
     </style>
 </head>
 <body>
@@ -22,18 +23,73 @@
         const WarnerBrosWebsite = () => {
             const [scrolled, setScrolled] = useState(false);
             useEffect(() => {
-                const handleScroll = () => setScrolled(window.scrollY > 40);
+                const handleScroll = () => setScrolled(window.scrollY > 50);
                 window.addEventListener("scroll", handleScroll);
                 return () => window.removeEventListener("scroll", handleScroll);
             }, []);
 
-            const stats = [
-                { value: "102", label: "Years of Cinema", sub: "Est. April 4, 1923" },
-                { value: "12,500+", label: "Films in Library", sub: "Variety 2023" },
-                { value: "220+", label: "Countries Served", sub: "Global Reach" },
-                { value: "35,000", label: "Employees Worldwide", sub: "Macrotrends 2024" }
-            ];
+            return (
+                <div className="min-h-screen">
+                    <nav className={`fixed w-full z-50 p-6 flex justify-between items-center transition-all ${scrolled ? 'bg-[#07070c]/90 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-[#C8A84B] to-[#9A7828] rounded flex items-center justify-center font-black text-black">WB</div>
+                            <span className="font-bold tracking-wider hidden sm:inline">WARNER BROS.</span>
+                        </div>
+                        <button className="bg-gradient-to-r from-[#C8A84B] to-[#9A7828] text-black px-5 py-2 rounded-sm font-bold text-xs tracking-widest hover:scale-105 transition">PARTNER WITH US</button>
+                    </nav>
 
+                    <section className="pt-40 pb-20 px-6 text-center">
+                        <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                            A Century of <br/><span className="gold-text italic">Bold Storytelling</span>
+                        </h1>
+                        <p className="max-w-2xl mx-auto text-gray-400 text-lg mb-12 italic">
+                            Founded in 1923, Warner Bros. has shaped global culture for over 102 years, bringing magic from the silver screen to the world.
+                        </p>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                            {[
+                                {v: "102", l: "Years of Cinema"},
+                                {v: "12,500+", l: "Films in Library"},
+                                {v: "220+", l: "Countries Served"},
+                                {v: "35,000", l: "Employees"}
+                            ].map((s, i) => (
+                                <div key={i} className="p-8 border border-[#C8A84B]/20 bg-white/5 backdrop-blur-sm rounded-lg hover:border-[#C8A84B]/50 transition">
+                                    <div className="text-3xl font-bold text-[#C8A84B] mb-2">{s.v}</div>
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">{s.l}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section className="py-20 px-6 bg-black/30">
+                        <h2 className="text-3xl font-bold text-center mb-16 gold-text">The Warner Brothers</h2>
+                        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            {[
+                                {n: "Harry Warner", r: "President", d: "The eldest brother who managed the finances and built the studio's foundation."},
+                                {n: "Sam Warner", r: "Tech Visionary", d: "The brother who pushed for 'talking pictures' and changed cinema history."},
+                                {n: "Jack L. Warner", r: "Production Head", d: "The youngest brother and Hollywood showman who signed legendary talents."}
+                            ].map((f, i) => (
+                                <div key={i} className="p-8 border border-white/5 bg-white/5 rounded-xl">
+                                    <h3 className="text-xl font-bold text-[#C8A84B] mb-2">{f.n}</h3>
+                                    <p className="text-xs text-gray-500 mb-4 uppercase tracking-widest">{f.r}</p>
+                                    <p className="text-gray-400 text-sm leading-relaxed">{f.d}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <footer className="py-12 border-t border-white/5 text-center">
+                        <p className="text-gray-600 text-xs tracking-widest uppercase">© 2026 Warner Bros. Discovery · All Rights Verified</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WarnerBrosWebsite />);
+    </script>
+</body>
+</html>
             return (
                 <div className="min-h-screen pb-20">
                     <nav className={`fixed w-full z-50 transition-all p-6 flex justify-between items-center ${scrolled ? 'bg-[#07070c] border-b border-[#C8A84B]/20' : 'bg-transparent'}`}>
