@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warner Bros. | Global Partnership Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;600;800&display=swap');
+        
+        body { 
+            background-color: #07070c; 
+            color: #eee8de; 
+            font-family: 'Playfair Display', serif;
+            background-image: radial-gradient(circle at 50% -20%, rgba(200,168,75,0.12) 0%, transparent 50%);
+        }
+
+        .gold-shimmer {
+            background: linear-gradient(90deg, #9A7828 0%, #C8A84B 30%, #e8c97a 50%, #C8A84B 70%, #9A7828 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .bg-card { background: rgba(255, 255, 255, 0.013); backdrop-filter: blur(10px); }
+        .border-gold { border-color: rgba(200, 168, 75, 0.16); }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <nav class="fixed w-full z-50 p-6 flex justify-between items-center bg-[#07070c]/90 backdrop-blur-md border-b border-gold">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-[#C8A84B] to-[#9A7828] rounded flex items-center justify-center font-black text-black">WB</div>
+            <div class="hidden sm:block">
+                <div class="text-sm font-bold tracking-widest uppercase">Warner Bros.</div>
+                <div class="text-[9px] text-[#C8A84B] tracking-[0.2em]">EST. 1923</div>
+            </div>
+        </div>
+        <button class="bg-gradient-to-r from-[#C8A84B] to-[#9A7828] text-black px-5 py-2 rounded text-[10px] font-bold uppercase tracking-widest hover:scale-105 transition">Partner With Us</button>
+    </nav>
+
+    <section class="pt-48 pb-20 px-6 text-center max-w-5xl mx-auto">
+        <div class="inline-block px-4 py-1 border border-[#C8A84B]/40 rounded text-[10px] tracking-[0.3em] uppercase mb-8 text-[#C8A84B] font-bold">
+            Founded April 4, 1923 • Burbank, California
+        </div>
+        <h1 class="text-5xl md:text-8xl font-black mb-4 leading-none uppercase tracking-tighter">
+            A Century of <br><span class="gold-shimmer italic font-normal normal-case">Bold Storytelling</span>
+        </h1>
+        <p class="max-w-2xl mx-auto text-gray-400 text-sm md:text-lg mb-12 italic leading-relaxed">
+            "To produce and distribute blockbusters worldwide." For over 102 years, Warner Bros. has remained the vanguard of global culture, defining the magic of cinema.
+        </p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-6 border border-gold bg-card rounded">
+                <div class="text-3xl font-black text-[#C8A84B] mb-1">102</div>
+                <div class="text-[9px] uppercase tracking-widest text-gray-500">Years of Cinema</div>
+            </div>
+            <div class="p-6 border border-gold bg-card rounded">
+                <div class="text-3xl font-black text-[#C8A84B] mb-1">12.5k+</div>
+                <div class="text-[9px] uppercase tracking-widest text-gray-500">Films in Library</div>
+            </div>
+            <div class="p-6 border border-gold bg-card rounded">
+                <div class="text-3xl font-black text-[#C8A84B] mb-1">220+</div>
+                <div class="text-[9px] uppercase tracking-widest text-gray-500">Global Markets</div>
+            </div>
+            <div class="p-6 border border-gold bg-card rounded">
+                <div class="text-3xl font-black text-[#C8A84B] mb-1">35k</div>
+                <div class="text-[9px] uppercase tracking-widest text-gray-500">Global Employees</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 border-y border-gold">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-black mb-12 text-center uppercase tracking-[0.3em] text-[#C8A84B]">Cinematic Masterpieces</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center group">
+                    <div class="h-40 bg-card border border-gold mb-4 flex items-center justify-center text-[#C8A84B]/20 font-black italic">CASABLANCA</div>
+                    <div class="text-xs font-bold uppercase">1942</div>
+                </div>
+                <div class="text-center group">
+                    <div class="h-40 bg-card border border-gold mb-4 flex items-center justify-center text-[#C8A84B]/20 font-black italic">HARRY POTTER</div>
+                    <div class="text-xs font-bold uppercase">2001–2011</div>
+                </div>
+                <div class="text-center group">
+                    <div class="h-40 bg-card border border-gold mb-4 flex items-center justify-center text-[#C8A84B]/20 font-black italic">THE DARK KNIGHT</div>
+                    <div class="text-xs font-bold uppercase">2008</div>
+                </div>
+                <div class="text-center group">
+                    <div class="h-40 bg-card border border-gold mb-4 flex items-center justify-center text-[#C8A84B]/20 font-black italic">BARBIE</div>
+                    <div class="text-xs font-bold uppercase">2023</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-white/[0.02]">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-black mb-16 text-center uppercase">The <span class="text-[#C8A84B]">Founders</span></h2>
+            <div class="space-y-12">
+                <div class="p-8 border-l-2 border-[#C8A84B] bg-card">
+                    <h3 class="text-xl font-black text-[#C8A84B] uppercase">Harry Warner</h3>
+                    <p class="text-[10px] text-gray-500 font-bold mb-4">CO-FOUNDER & PRESIDENT (1923–1956)</p>
+                    <p class="text-gray-400 text-sm leading-relaxed italic">The eldest brother who ran the New York headquarters, overseeing finance and distribution. He championed the motto: 'Pictures that educate, enlighten, and entertain.'</p>
+                </div>
+                <div class="p-8 border-l-2 border-[#C8A84B] bg-card">
+                    <h3 class="text-xl font-black text-[#C8A84B] uppercase">Sam Warner</h3>
+                    <p class="text-[10px] text-gray-500 font-bold mb-4">CHIEF TECHNOLOGY VISIONARY</p>
+                    <p class="text-gray-400 text-sm leading-relaxed italic">The visionary who bet the studio on synchronized sound technology, leading to 'The Jazz Singer' (1927) and the birth of 'talkies'.</p>
+                </div>
+                <div class="p-8 border-l-2 border-[#C8A84B] bg-card">
+                    <h3 class="text-xl font-black text-[#C8A84B] uppercase">Jack L. Warner</h3>
+                    <p class="text-[10px] text-gray-500 font-bold mb-4">HEAD OF PRODUCTION (1923–1967)</p>
+                    <p class="text-gray-400 text-sm leading-relaxed italic">The youngest brother and Hollywood showman who signed legends like Humphrey Bogart and Bette Davis, leading the studio through its Golden Era.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-black mb-12 text-center uppercase tracking-widest text-[#C8A84B]">Legacy Milestones</h2>
+        <div class="space-y-8 text-sm">
+            <div class="flex gap-6"><span class="font-bold text-[#C8A84B]">1923</span><p class="text-gray-400 italic">Warner Bros. Pictures is officially incorporated on April 4.</p></div>
+            <div class="flex gap-6"><span class="font-bold text-[#C8A84B]">1927</span><p class="text-gray-400 italic">The Jazz Singer premieres, revolutionizing cinema as the first major 'talkie'.</p></div>
+            <div class="flex gap-6"><span class="font-bold text-[#C8A84B]">1942</span><p class="text-gray-400 italic">Casablanca premieres, eventually winning the Oscar for Best Picture.</p></div>
+            <div class="flex gap-6"><span class="font-bold text-[#C8A84B]">2022</span><p class="text-gray-400 italic">Warner Bros. Discovery is formed via a $43 billion merger.</p></div>
+            <div class="flex gap-6"><span class="font-bold text-[#C8A84B]">2023</span><p class="text-gray-400 italic">Barbie crosses $1.4 billion, becoming one of WB's highest-grossing films.</p></div>
+        </div>
+    </section>
+
+    <footer class="py-20 border-t border-gold text-center">
+        <div class="w-12 h-12 bg-card border border-gold flex items-center justify-center mx-auto mb-6 text-[#C8A84B] font-bold">WB</div>
+        <p class="text-[10px] tracking-[0.5em] uppercase font-bold opacity-40">© 2026 Warner Bros. Discovery • Global Portal</p>
+    </footer>
+
+</body>
+</html>
 
