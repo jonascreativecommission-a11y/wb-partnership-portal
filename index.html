@@ -1,1 +1,459 @@
+import { useState, useEffect, useRef } from "react";
+import {
+  Award, Film, Tv, Globe, ChevronDown, ArrowRight,
+  Mail, Phone, User, CheckCircle, Zap, Shield, TrendingUp, Users, BookOpen
+} from "lucide-react";
 
+// ── VERIFIED FACTS ──────────────────────────────────────────────────────────
+// Wikipedia · Britannica · Variety (WB Centennial 2023) · wbd.com · Macrotrends
+// Founded: April 4, 1923 · Burbank, CA · Library: 12,500+ films (Variety 2023)
+// CEO: David Zaslav (since April 8, 2022) · 220+ countries · 35,000 employees (2024)
+// Original motto: "Pictures that educate, enlighten and entertain" (Cass Warner / Variety)
+// ────────────────────────────────────────────────────────────────────────────
+
+const FILMS = [
+  { title: "Casablanca", year: "1942", genre: "Drama" },
+  { title: "The Jazz Singer", year: "1927", genre: "Musical · First Talkie" },
+  { title: "The Dark Knight", year: "2008", genre: "Action" },
+  { title: "Harry Potter Series", year: "2001–2011", genre: "Fantasy" },
+  { title: "The Matrix", year: "1999", genre: "Sci-Fi" },
+  { title: "Inception", year: "2010", genre: "Thriller" },
+  { title: "Goodfellas", year: "1990", genre: "Crime" },
+  { title: "Barbie", year: "2023", genre: "Comedy" },
+];
+
+const STATS = [
+  { value: "102", label: "Years of Cinema", sub: "Est. April 4, 1923", icon: Award },
+  { value: "12,500+", label: "Films in Library", sub: "Variety · WB Centennial 2023", icon: Film },
+  { value: "220+", label: "Countries & Territories", sub: "Warner Bros. Discovery official", icon: Globe },
+  { value: "35,000", label: "Employees Worldwide", sub: "Macrotrends 2024", icon: Users },
+];
+
+const SERVICES = [
+  {
+    icon: Film,
+    title: "Warner Bros. Pictures",
+    desc: "One of Hollywood's 'Big Five' studios — home to New Line Cinema, DC Studios, Castle Rock Entertainment, and Warner Bros. Pictures Animation. Producing and distributing blockbusters worldwide since 1923.",
+  },
+  {
+    icon: Tv,
+    title: "Streaming — Max",
+    desc: "Max (formerly HBO Max, name restored 2025) delivers premium HBO originals, Discovery lifestyle content, and WB films directly to global audiences. Over 116 million subscribers worldwide.",
+  },
+  {
+    icon: Globe,
+    title: "Global Linear Networks",
+    desc: "CNN, TNT, TBS, TruTV, HGTV, Food Network, Discovery Channel, Animal Planet, Cartoon Network, Eurosport — a vast cable and broadcast portfolio spanning 220+ countries and territories.",
+  },
+  {
+    icon: Zap,
+    title: "Warner Bros. Games",
+    desc: "Warner Bros. Interactive Entertainment publishes iconic titles — Batman: Arkham, Mortal Kombat, Hogwarts Legacy, and the LEGO franchise — bringing beloved IP to interactive entertainment.",
+  },
+  {
+    icon: Shield,
+    title: "DC Studios & DC Comics",
+    desc: "Home to Superman, Batman, and Wonder Woman. DC Comics has been a WB subsidiary since 1969. DC Studios now oversees a unified DC Universe across film, television, and animation.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Warner Bros. Animation",
+    desc: "Creators of Looney Tunes, Cartoon Network Studios, and 90+ years of beloved animated characters — Bugs Bunny, Daffy Duck, Scooby-Doo, and Tom & Jerry. Bugs Bunny is the official WB mascot.",
+  },
+];
+
+const FOUNDERS = [
+  {
+    name: "Harry Warner",
+    role: "Co-Founder & President · 1923–1956",
+    initials: "HW",
+    born: "1881, Krasnosielc, Poland",
+    fact: "The eldest brother and company president, Harry ran New York headquarters overseeing finance and distribution. A deeply principled man, he championed the studio's founding motto: 'Pictures that educate, enlighten and entertain.' His business acumen funded Sam's technological gambles and built the studio's financial foundation.",
+  },
+  {
+    name: "Sam Warner",
+    role: "Co-Founder & Chief Technology Visionary",
+    initials: "SW",
+    born: "1887, Krasnosielc, Poland",
+    fact: "Sam was the visionary who championed Vitaphone synchronized-sound technology, convincing his skeptical brothers to bet the studio on it. His gamble produced The Jazz Singer (October 1927) — the first major feature-length talking picture, launching the talkie revolution. Heartbreakingly, Sam died of a cerebral hemorrhage the night before the premiere, never witnessing the revolution he created.",
+  },
+  {
+    name: "Jack L. Warner",
+    role: "Co-Founder & Head of Production · 1923–1967",
+    initials: "JW",
+    born: "1892, London, Ontario, Canada",
+    fact: "The youngest brother and Hollywood showman, Jack ran all creative production on the West Coast. He signed and developed legendary talent — Humphrey Bogart, Bette Davis, Errol Flynn, and James Cagney — and led the studio through its golden era, into television production (1955), and held creative control until the studio's 1967 sale to Seven Arts Productions.",
+  },
+];
+
+const MILESTONES = [
+  { year: "1903", event: "The Warner brothers open the Cascade — their first movie theater — in New Castle, Pennsylvania, after investing $150 to screen The Great Train Robbery." },
+  { year: "1923", event: "Warner Bros. Pictures, Inc. is officially incorporated on April 4, 1923, in Burbank, California, by Harry, Albert, Sam, and Jack Warner." },
+  { year: "1927", event: "The Jazz Singer premieres — the first major feature-length talking picture — revolutionizing cinema forever. Sam Warner dies the night before its premiere." },
+  { year: "1942", event: "Casablanca, directed by Michael Curtiz, premieres. It wins the Academy Award for Best Picture (1944) and becomes one of the greatest films ever made." },
+  { year: "1955", event: "Warner Bros. Television launches, producing Cheyenne for ABC — television's first hour-long Western — pivoting the studio into the TV era." },
+  { year: "1969", event: "Kinney National Company acquires Warner Bros.-Seven Arts. Under Steve Ross, Kinney renames itself Warner Communications and acquires DC Comics." },
+  { year: "1990", event: "Warner Communications merges with Time Inc. to form Time Warner — at the time the world's largest media and entertainment company." },
+  { year: "2001", event: "Harry Potter and the Sorcerer's Stone launches the highest-grossing film series in history (not adjusted for inflation), fully produced and distributed by Warner Bros." },
+  { year: "2022", event: "Warner Bros. Discovery is formed on April 8, 2022, after AT&T's WarnerMedia merges with Discovery, Inc. in a $43 billion deal. David Zaslav becomes President & CEO." },
+  { year: "2023", event: "Warner Bros. celebrates its 100th anniversary. Barbie (2023), directed by Greta Gerwig, becomes one of WB's highest-grossing films ever, crossing $1.4 billion worldwide." },
+];
+
+// ── THEME TOKENS ─────────────────────────────────────────────────────────────
+const C = {
+  gold: "#C8A84B",
+  goldDark: "#9A7828",
+  goldGlow: "rgba(200,168,75,0.22)",
+  bg: "#07070c",
+  surface: "rgba(255,255,255,0.013)",
+  border: "rgba(200,168,75,0.16)",
+  borderHover: "rgba(200,168,75,0.42)",
+  text: "#eee8de",
+  muted: "#76705f",
+  mutedLight: "#a89e8e",
+};
+
+// ── REUSABLE CARD WITH HOVER ──────────────────────────────────────────────────
+function HoverCard({ children, style = {} }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        border: `1px solid ${hovered ? C.borderHover : C.border}`,
+        borderRadius: 3,
+        background: hovered ? "rgba(200,168,75,0.06)" : C.surface,
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
+        boxShadow: hovered ? `0 12px 40px ${C.goldGlow}` : "none",
+        transition: "all 0.28s ease",
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export default function WarnerBrosWebsite() {
+  const [scrolled, setScrolled] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [activeFounder, setActiveFounder] = useState(0);
+  const [activeMilestone, setActiveMilestone] = useState(9);
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => setActiveFounder((p) => (p + 1) % FOUNDERS.length), 5200);
+    return () => clearInterval(t);
+  }, []);
+
+  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  const inputBase = {
+    width: "100%",
+    background: "rgba(255,255,255,0.04)",
+    border: `1px solid ${C.border}`,
+    borderRadius: 2,
+    color: C.text,
+    fontSize: 15,
+    outline: "none",
+    fontFamily: "'Playfair Display', Georgia, serif",
+    boxSizing: "border-box",
+    transition: "border-color 0.2s",
+  };
+
+  return (
+    <div style={{
+      fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif",
+      background: C.bg,
+      color: C.text,
+      minHeight: "100vh",
+      overflowX: "hidden",
+      // Cinematic radial background depth
+      backgroundImage: "radial-gradient(ellipse 120% 80% at 50% 0%, rgba(200,168,75,0.07) 0%, transparent 55%), radial-gradient(ellipse 80% 60% at 80% 100%, rgba(200,168,75,0.04) 0%, transparent 50%)",
+    }}>
+
+      {/* ── GOOGLE FONT IMPORT ── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @keyframes bounce {
+          0%,100% { transform: translateY(0); }
+          50%      { transform: translateY(8px); }
+        }
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+
+        input::placeholder, textarea::placeholder { color: #3a3028; }
+        input:focus, textarea:focus { border-color: rgba(200,168,75,0.55) !important; }
+        textarea { resize: vertical; }
+
+        ::-webkit-scrollbar       { width: 5px; }
+        ::-webkit-scrollbar-track { background: #07070c; }
+        ::-webkit-scrollbar-thumb { background: #211a0f; border-radius: 3px; }
+
+        /* Nav links: hidden on mobile, visible on desktop */
+        .nav-link { display: none !important; }
+        @media (min-width: 769px) {
+          .nav-link { display: inline !important; }
+        }
+
+        /* Mobile sticky CTA: hidden on desktop */
+        .mobile-sticky { display: none !important; }
+        @media (max-width: 768px) {
+          .mobile-sticky { display: block !important; }
+        }
+
+        /* Stats grid: 4 columns on desktop, 2 on mobile */
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+        }
+        @media (max-width: 768px) {
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* Films & Services grids */
+        .films-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 18px;
+        }
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+          gap: 22px;
+        }
+
+        /* Milestone year buttons wrap cleanly */
+        .milestone-btns {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          justify-content: center;
+          margin-bottom: 36px;
+        }
+
+        /* Founder tabs wrap on mobile */
+        .founder-tabs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: center;
+          margin-bottom: 32px;
+        }
+
+        /* Founder card row → column on mobile */
+        .founder-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 28px;
+        }
+        @media (max-width: 600px) {
+          .founder-card { flex-direction: column; align-items: center; text-align: center; }
+        }
+
+        /* Leadership row → column on mobile */
+        .leadership-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 26px;
+          flex-wrap: wrap;
+          max-width: 780px;
+          margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+          .leadership-row { flex-direction: column; text-align: center; }
+          .leadership-row > div:last-child { text-align: center; }
+        }
+
+        /* Hero CTA row → column on small mobile */
+        .hero-ctas {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        /* Footer row */
+        .footer-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 18px;
+          margin-bottom: 22px;
+        }
+
+        /* Gold shimmer text effect for hero title */
+        .gold-shimmer {
+          background: linear-gradient(90deg, #9A7828 0%, #C8A84B 30%, #e8c97a 50%, #C8A84B 70%, #9A7828 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 4s linear infinite;
+        }
+
+        /* Section fade-in animation */
+        .anim-fade { animation: fadeSlideUp 0.5s ease forwards; }
+
+        /* Hover tab button */
+        .tab-btn:hover { border-color: rgba(200,168,75,0.4) !important; color: #C8A84B !important; }
+
+        /* CTA button hover lift */
+        .cta-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 44px rgba(200,168,75,0.38) !important;
+        }
+        .cta-primary { transition: transform 0.22s, box-shadow 0.22s; }
+
+        /* Ghost button hover */
+        .cta-ghost:hover { background: rgba(200,168,75,0.08) !important; }
+        .cta-ghost { transition: background 0.22s; }
+      `}</style>
+
+      {/* ══════════════════════════════════════════════════════════════
+          NAV
+      ══════════════════════════════════════════════════════════════ */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        background: scrolled ? "rgba(7,7,12,0.96)" : "transparent",
+        borderBottom: scrolled ? `1px solid ${C.border}` : "none",
+        backdropFilter: scrolled ? "blur(14px)" : "none",
+        transition: "background 0.35s, border 0.35s, backdrop-filter 0.35s",
+        padding: "0 5vw",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: 70,
+      }}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: 3,
+            background: `linear-gradient(135deg, ${C.gold} 0%, ${C.goldDark} 100%)`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontWeight: 900, fontSize: 17, color: C.bg, letterSpacing: "-1px",
+          }}>WB</div>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.05em" }}>Warner Bros.</div>
+            <div style={{ fontSize: 10, color: C.gold, letterSpacing: "0.18em" }}>ENTERTAINMENT · EST. 1923</div>
+          </div>
+        </div>
+
+        {/* Nav links + CTA */}
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          {[["Films", "#films"], ["History", "#history"], ["Services", "#services"], ["Contact", "#contact"]].map(([lbl, href]) => (
+            <a key={lbl} href={href} className="nav-link" style={{
+              fontSize: 13, color: C.mutedLight, textDecoration: "none", letterSpacing: "0.08em",
+            }}>{lbl}</a>
+          ))}
+          <button onClick={scrollToForm} className="cta-primary" style={{
+            padding: "10px 22px", borderRadius: 2,
+            background: `linear-gradient(135deg, ${C.gold}, ${C.goldDark})`,
+            color: C.bg, border: "none", cursor: "pointer",
+            fontWeight: 700, fontSize: 13, letterSpacing: "0.06em",
+            fontFamily: "'Playfair Display', Georgia, serif",
+            boxShadow: `0 4px 18px ${C.goldGlow}`,
+          }}>Partner With Us</button>
+        </div>
+      </nav>
+
+      {/* ══════════════════════════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════════════════════════ */}
+      <section style={{
+        minHeight: "100vh",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        textAlign: "center",
+        padding: "130px 5vw 90px",
+        position: "relative",
+      }}>
+        {/* Decorative rings */}
+        {[580, 800, 1040].map((s, i) => (
+          <div key={s} style={{
+            position: "absolute", top: "50%", left: "50%",
+            transform: "translate(-50%,-50%)",
+            width: `min(${s}px, 94vw)`, height: `min(${s}px, 94vw)`,
+            border: `1px solid rgba(200,168,75,${0.05 - i * 0.014})`,
+            borderRadius: "50%", pointerEvents: "none",
+          }} />
+        ))}
+
+        {/* Badge */}
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          padding: "7px 20px",
+          border: `1px solid rgba(200,168,75,0.42)`,
+          borderRadius: 2, marginBottom: 36,
+          fontSize: 11, letterSpacing: "0.22em", color: C.gold, textTransform: "uppercase",
+        }}>
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.gold }} />
+          Founded April 4, 1923 · Burbank, California
+        </div>
+
+        {/* Headline */}
+        <h1 style={{
+          fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
+          fontWeight: 900, lineHeight: 1.04,
+          marginBottom: 10, letterSpacing: "-0.025em",
+        }}>
+          A Century of
+        </h1>
+        <h1 className="gold-shimmer" style={{
+          fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
+          fontWeight: 900, lineHeight: 1.04,
+          marginBottom: 30, letterSpacing: "-0.025em",
+        }}>
+          Bold Storytelling
+        </h1>
+
+        {/* Sub-headline */}
+        <p style={{
+          fontSize: "clamp(1rem, 2.2vw, 1.22rem)",
+          color: C.mutedLight, maxWidth: 640, margin: "0 auto 52px",
+          lineHeight: 1.78, fontStyle: "italic",
+        }}>
+          Warner Bros. Pictures was incorporated on April 4, 1923, by brothers Harry, Albert, Sam, and Jack Warner —
+          sons of a Polish immigrant cobbler who started with a single movie projector and $150.
+          More than 102 years later, it stands as one of Hollywood's "Big Five" studios, home to 12,500+ films
+          and stories that have shaped global culture across every generation.
+        </p>
+
+        {/* CTAs */}
+        <div className="hero-ctas">
+          <button onClick={scrollToForm} className="cta-primary" style={{
+            padding: "17px 44px", borderRadius: 2,
+            background: `linear-gradient(135deg, ${C.gold}, ${C.goldDark})`,
+            color: C.bg, border: "none", cursor: "pointer",
+            fontWeight: 800, fontSize: 16, letterSpacing: "0.04em",
+            display: "flex", alignItems: "center", gap: 10,
+            boxShadow: `0 10px 40px ${C.goldGlow}`,
+            fontFamily: "'Playfair Display', Georgia, serif",
+          }}>
+            Partner With Us <ArrowRight size={18} />
+          </button>
+          <a href="#history" className="cta-ghost" style={{
+            padding: "17px 44px", borderRadius: 2,
+            border: `1px solid rgba(200,168,75,0.42)`,
+            color: C.gold, textDecoration: "none",
+            fontWeight: 600, fontSize: 1
