@@ -1,151 +1,983 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warner Bros. | Partnership Portal</title>
-    
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;600&display=swap');
-        body { margin: 0; background: #06060b; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warner Bros. Entertainment — Official Partnership Portal</title>
+  <meta name="description" content="Partner with Warner Bros. — 102 years of bold storytelling, 12,500+ films, 220+ countries. Official partnership inquiries." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Playfair Display', Georgia, serif;
+      background: #06060b;
+      color: #eee8de;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #06060b; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(#9A7828, #C8A84B); border-radius: 2px; }
+
+    /* ── CSS VARIABLES ── */
+    :root {
+      --gold: #C8A84B;
+      --gold-dark: #9A7828;
+      --gold-glow: rgba(200,168,75,0.25);
+      --bg: #06060b;
+      --border: rgba(200,168,75,0.16);
+      --muted: #8a7e6e;
+      --muted-dim: #5a5040;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -300% center; }
+      100% { background-position: 300% center; }
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(9px); }
+    }
+    @keyframes pulseRing {
+      0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.18; }
+      100% { transform: translate(-50%,-50%) scale(1.7); opacity: 0; }
+    }
+    @keyframes grain {
+      0%,100% { transform: translate(0,0); }
+      20% { transform: translate(-2%,3%); }
+      40% { transform: translate(2%,-2%); }
+      60% { transform: translate(-1%,2%); }
+      80% { transform: translate(3%,-1%); }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .anim-fade  { animation: fadeUp 0.8s ease both; }
+    .anim-fade1 { animation: fadeUp 0.8s 0.1s ease both; }
+    .anim-fade2 { animation: fadeUp 0.8s 0.25s ease both; }
+    .anim-fade3 { animation: fadeUp 0.8s 0.42s ease both; }
+
+    /* ── GRAIN OVERLAY ── */
+    #grain {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      animation: grain 8s steps(2) infinite;
+    }
+
+    /* ── NAVIGATION ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      padding: 0 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 74px;
+      transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    }
+    #nav.scrolled {
+      background: rgba(6,6,11,0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; flex-shrink: 0; cursor: pointer; }
+    .nav-brand-text-main { font-size: 18px; font-weight: 800; letter-spacing: 0.04em; color: #eee8de; }
+    .nav-brand-text-sub  { font-size: 9px; color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; font-weight: 600; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold); }
+    @media (max-width: 900px) { .nav-links a:not(.cta-nav) { display: none; } }
+
+    /* ── BUTTONS ── */
+    .btn-gold {
+      padding: 13px 28px; border-radius: 2px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #06060b; border: none; cursor: pointer;
+      font-weight: 800; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      font-family: 'Playfair Display', Georgia, serif;
+      box-shadow: 0 6px 24px var(--gold-glow);
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .btn-gold:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 18px 50px rgba(200,168,75,0.45); }
+    .btn-ghost {
+      padding: 17px 44px; border-radius: 2px;
+      border: 1px solid rgba(200,168,75,0.38);
+      color: var(--gold); background: transparent; cursor: pointer;
+      font-weight: 600; font-size: 15px;
+      font-family: 'Playfair Display', Georgia, serif;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none;
+      transition: background 0.22s, border-color 0.22s;
+    }
+    .btn-ghost:hover { background: rgba(200,168,75,0.1); border-color: rgba(200,168,75,0.65); }
+    .btn-hero-gold { padding: 18px 48px; font-size: 15px; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 5vw 100px;
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse 100% 70% at 50% -10%, rgba(200,168,75,0.11) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(13,34,68,0.4) 0%, transparent 55%),
+        #06060b;
+    }
+    .ring {
+      position: absolute; top: 50%; left: 50%;
+      border-radius: 50%; pointer-events: none;
+      border: 1px solid rgba(200,168,75,0.06);
+      transform: translate(-50%,-50%);
+    }
+    .pulse-ring {
+      position: absolute; top: 50%; left: 50%;
+      width: 320px; height: 320px; border-radius: 50%;
+      border: 1px solid rgba(200,168,75,0.15);
+      animation: pulseRing 4s ease-out infinite;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 18px;
+      border: 1px solid rgba(200,168,75,0.38);
+      border-radius: 20px;
+      font-size: 11px; color: var(--gold); letter-spacing: 0.12em;
+      background: rgba(200,168,75,0.05);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 32px;
+    }
+    .hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+    .hero-h1 {
+      font-size: clamp(3rem, 8.5vw, 7rem);
+      font-weight: 900; line-height: 0.96;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .hero-h1-gold {
+      font-size: clamp(3rem, 8.5vw, 7rem);
+      font-weight: 900; line-height: 0.96;
+      letter-spacing: -0.03em; margin-bottom: 36px;
+      background: linear-gradient(90deg, #9A7828 0%, #e8d080 25%, #C8A84B 50%, #e8d080 75%, #9A7828 100%);
+      background-size: 300% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 5s linear infinite;
+      display: block;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      color: var(--muted); max-width: 620px; margin: 0 auto 52px;
+      line-height: 1.82; font-style: italic;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .scroll-hint {
+      position: absolute; bottom: 38px;
+      color: #3a3428; text-decoration: none;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .scroll-arrow { animation: bounce 2.2s infinite; font-size: 18px; color: #3a3428; }
+
+    /* ── STATS ── */
+    #stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(200,168,75,0.025);
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      max-width: 1200px; margin: 0 auto;
+    }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+    .stat-cell {
+      padding: 52px 20px; text-align: center;
+      border-right: 1px solid rgba(200,168,75,0.12);
+    }
+    .stat-cell:last-child { border-right: none; }
+    @media (max-width: 700px) { .stat-cell:nth-child(2) { border-right: none; } }
+    .stat-icon { font-size: 22px; color: var(--gold); margin-bottom: 14px; opacity: 0.8; }
+    .stat-value { font-size: clamp(2rem,3.5vw,2.8rem); font-weight: 900; color: var(--gold); letter-spacing: -0.025em; line-height: 1; }
+    .stat-label { font-size: 13px; color: #eee8de; font-weight: 600; margin-top: 10px; }
+    .stat-sub   { font-size: 10px; color: var(--muted-dim); margin-top: 5px; font-style: italic; }
+
+    /* ── SECTION SHARED ── */
+    .section { padding: 110px 5vw; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-label {
+      font-size: 11px; letter-spacing: 0.22em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 14px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; margin-bottom: 16px;
+    }
+    .section-title span { color: var(--gold); }
+    .section-sub {
+      font-size: 15px; color: var(--muted); font-style: italic;
+      line-height: 1.82; font-family: 'Cormorant Garamond', serif;
+      max-width: 540px; margin: 0 auto;
+    }
+    .section-alt { background: rgba(200,168,75,0.022); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    /* ── FILMS GRID ── */
+    .films-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1100px) { .films-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 700px)  { .films-grid { grid-template-columns: repeat(2,1fr); gap: 12px; } }
+
+    .film-card {
+      position: relative; border-radius: 8px; overflow: hidden;
+      cursor: pointer; aspect-ratio: 2/3;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s;
+    }
+    .film-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(200,168,75,0.45);
+    }
+    .film-card img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s ease;
+    }
+    .film-card:hover img { transform: scale(1.06); }
+    .film-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent 0%, rgba(0,0,0,0.93) 100%);
+      padding: 44px 14px 14px;
+    }
+    .film-genre { font-size: 9px; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+    .film-title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 4px; }
+    .film-meta  { display: flex; align-items: center; justify-content: space-between; }
+    .film-year  { font-size: 11px; color: rgba(255,255,255,0.45); }
+    .film-rating { font-size: 11px; color: var(--gold); display: flex; align-items: center; gap: 3px; }
+    .film-hover-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.78); backdrop-filter: blur(4px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; text-align: center;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .film-card:hover .film-hover-overlay { opacity: 1; pointer-events: auto; }
+    .film-play-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .film-hover-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+    .film-hover-tag   { font-size: 11px; color: var(--gold); font-style: italic; line-height: 1.5; }
+    .film-fallback {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 20px; text-align: center;
+    }
+
+    /* ── FILMSTRIP ── */
+    .filmstrip { display: flex; gap: 4px; align-items: center; justify-content: center; opacity: 0.2; margin: 40px 0; }
+    .filmstrip-hole { width: 8px; height: 10px; border-radius: 1px; background: var(--gold); }
+
+    /* ── FOUNDERS ── */
+    .founder-tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 36px; flex-wrap: wrap; }
+    .founder-tab {
+      padding: 10px 24px; border-radius: 2px;
+      border: 1px solid var(--border);
+      background: transparent; color: #6a6050;
+      font-size: 14px; cursor: pointer;
+      font-family: 'Playfair Display', Georgia, serif;
+      transition: all 0.2s;
+    }
+    .founder-tab.active { border-color: var(--gold); background: rgba(200,168,75,0.12); color: var(--gold); font-weight: 700; }
+    .founder-tab:hover:not(.active) { border-color: rgba(200,168,75,0.4); color: var(--gold); }
+    .founder-panel { display: none; animation: fadeUp 0.45s ease both; }
+    .founder-panel.active { display: block; }
+    .founder-card {
+      padding: 40px 44px;
+      border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: 4px; background: rgba(200,168,75,0.04);
+      display: flex; align-items: flex-start; gap: 26px;
+    }
+    @media (max-width: 580px) { .founder-card { flex-direction: column; align-items: center; text-align: center; padding: 28px 20px; } }
+    .founder-avatar {
+      width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 22px; color: #06060b;
+      box-shadow: 0 10px 30px rgba(200,168,75,0.25);
+    }
+    .founder-name { font-size: 22px; font-weight: 800; margin-bottom: 3px; }
+    .founder-role { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+    .founder-born { font-size: 12px; color: var(--muted-dim); font-style: italic; margin-bottom: 16px; }
+    .founder-bio  { font-size: 15px; color: var(--muted); line-height: 1.85; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem,1.8vw,1.1rem); }
+
+    /* ── MILESTONE ── */
+    .milestone-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
+    .milestone-btn {
+      padding: 8px 18px; border-radius: 2px;
+      border: 1px solid var(--border); background: transparent;
+      color: #6a6050; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'Playfair Display', Georgia, serif;
+      transition: all 0.2s;
+    }
+    .milestone-btn.active { border-color: var(--gold); background: rgba(200,168,75,0.12); color: var(--gold); }
+    .milestone-btn:hover:not(.active) { border-color: rgba(200,168,75,0.4); color: var(--gold); }
+    .milestone-panel { display: none; animation: fadeUp 0.4s ease both; }
+    .milestone-panel.active { display: block; }
+    .milestone-card {
+      padding: 44px 48px;
+      border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: 4px; background: rgba(200,168,75,0.04);
+      max-width: 900px; margin: 0 auto;
+    }
+    @media (max-width: 580px) { .milestone-card { padding: 28px 20px; } }
+    .milestone-year { font-size: clamp(2.2rem,5vw,3.4rem); font-weight: 900; color: var(--gold); margin-bottom: 18px; letter-spacing: -0.025em; }
+    .milestone-event { font-size: clamp(1rem,2vw,1.18rem); color: var(--muted); line-height: 1.88; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+    /* ── SERVICES ── */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    }
+    @media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 580px) { .services-grid { grid-template-columns: 1fr; } }
+    .service-card {
+      padding: 32px 28px; border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.012);
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .service-card:hover {
+      border-color: rgba(200,168,75,0.45); background: rgba(200,168,75,0.07);
+      transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .service-icon-wrap {
+      width: 52px; height: 52px; border-radius: 6px;
+      background: rgba(200,168,75,0.08);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 22px; transition: background 0.3s;
+      font-size: 24px;
+    }
+    .service-card:hover .service-icon-wrap { background: rgba(200,168,75,0.18); }
+    .service-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; transition: color 0.3s; }
+    .service-card:hover .service-title { color: #e8c96a; }
+    .service-desc { font-size: 14px; color: var(--muted); line-height: 1.82; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+    /* ── LEADERSHIP ── */
+    .leadership-card {
+      max-width: 900px; margin: 0 auto;
+      padding: 52px 56px;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: rgba(200,168,75,0.03);
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    }
+    @media (max-width: 600px) { .leadership-card { padding: 32px 20px; flex-direction: column; text-align: center; } }
+    .leadership-left { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .leadership-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 24px; color: #06060b;
+      box-shadow: 0 12px 36px rgba(200,168,75,0.28);
+    }
+    .leadership-name { font-size: 26px; font-weight: 900; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .leadership-badge {
+      font-size: 10px; padding: 4px 12px; border-radius: 20px;
+      border: 1px solid rgba(200,168,75,0.35); color: var(--gold);
+      background: rgba(200,168,75,0.05); letter-spacing: 0.08em;
+    }
+    .leadership-role { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
+    .leadership-bio  { font-size: clamp(1rem,1.8vw,1.1rem); color: var(--muted); line-height: 1.88; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+    .leadership-src  { font-size: 11px; color: var(--muted-dim); margin-top: 16px; font-style: italic; }
+
+    /* ── CONTACT FORM ── */
+    #contact { background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(200,168,75,0.06) 0%, transparent 60%), #06060b; border-top: 1px solid var(--border); }
+    .form-wrap { max-width: 700px; margin: 0 auto; }
+    .form-box {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: clamp(28px,6vw,52px) clamp(20px,5vw,48px);
+      background: rgba(255,255,255,0.012);
+      display: flex; flex-direction: column; gap: 22px;
+    }
+    .form-label { font-size: 10px; color: var(--muted-dim); letter-spacing: 0.16em; display: block; margin-bottom: 10px; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; }
+    .form-field-wrap { position: relative; }
+    .form-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #4a4030; font-size: 15px; pointer-events: none; }
+    .form-input {
+      width: 100%; padding: 14px 16px 14px 44px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 2px; color: #eee8de; font-size: 15px;
+      font-family: 'Playfair Display', Georgia, serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus { border-color: rgba(200,168,75,0.6); outline: none; box-shadow: 0 0 0 3px rgba(200,168,75,0.08); }
+    .form-input::placeholder { color: #2e2820; }
+    .form-textarea {
+      width: 100%; padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 2px; color: #eee8de; font-size: 15px;
+      font-family: 'Playfair Display', Georgia, serif;
+      resize: vertical; min-height: 130px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-textarea:focus { border-color: rgba(200,168,75,0.6); outline: none; box-shadow: 0 0 0 3px rgba(200,168,75,0.08); }
+    .form-textarea::placeholder { color: #2e2820; }
+    .form-submit { width: 100%; padding: 18px 40px; border-radius: 2px; margin-top: 4px; font-size: 16px; }
+    .success-box {
+      padding: 72px 48px; text-align: center;
+      border: 1px solid rgba(200,168,75,0.32); border-radius: 6px;
+      background: rgba(200,168,75,0.05);
+      animation: fadeUp 0.5s ease both; display: none;
+    }
+    .success-icon { font-size: 56px; margin-bottom: 24px; color: var(--gold); }
+    .success-title { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+    .success-sub   { color: var(--muted); font-style: italic; font-size: 15px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 44px 5vw;
+      background: #06060b;
+      overflow: hidden;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; margin-bottom: 24px; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; }
+    .footer-brand-name { font-size: 14px; font-weight: 700; }
+    .footer-brand-sub  { font-size: 10px; color: var(--muted-dim); letter-spacing: 0.08em; }
+    .footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
+    .footer-links span { font-size: 12px; color: var(--muted-dim); cursor: pointer; font-family: 'Cormorant Garamond', serif; transition: color 0.2s; }
+    .footer-links span:hover { color: var(--gold); }
+    .footer-divider { border-top: 1px solid rgba(200,168,75,0.08); padding-top: 20px; }
+    .footer-copy { font-size: 11px; color: #3a3028; line-height: 1.7; }
+
+    /* ── MOBILE STICKY CTA ── */
+    #mobile-cta {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+      background: rgba(6,6,11,0.97);
+      border-top: 1px solid rgba(200,168,75,0.25);
+      padding: 12px 18px;
+    }
+    #mobile-cta .btn-gold { width: 100%; justify-content: center; font-size: 15px; padding: 16px; }
+    @media (max-width: 768px) { #mobile-cta { display: block; } body { padding-bottom: 80px; } }
+
+    /* ── UTILITY ── */
+    .text-gold { color: var(--gold); }
+    .note-text { text-align: center; font-size: 11px; color: #3a3028; font-style: italic; line-height: 1.7; }
+    .divider-line { border-top: 1px solid rgba(200,168,75,0.08); margin: 40px 0; }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        // Kinukuha natin ang React hooks at Lucide icons para maging available sa code mo
-        const { useState, useEffect, useRef } = React;
-        const { 
-            ArrowRight, Mail, Phone, User, CheckCircle, ChevronDown, Play, 
-            Award, Film, Globe, Users, Tv, Zap, Shield, TrendingUp, 
-            BookOpen, Star, ExternalLink 
-        } = lucide;
+<!-- GRAIN -->
+<div id="grain"></div>
 
-        /* --- DATA FROM YOUR CODE --- */
-        const FILMS = [
-          { title: "Harry Potter and the Sorcerer's Stone", year: "2001", genre: "Fantasy", rating: "7.9", poster: "https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg", tagline: "Let the Magic Begin", color: "#740001" },
-          { title: "The Dark Knight", year: "2008", genre: "Action · Crime", rating: "9.0", poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", tagline: "Why So Serious?", color: "#1a1a2e" },
-          { title: "Barbie", year: "2023", genre: "Comedy · Fantasy", rating: "7.1", poster: "https://image.tmdb.org/t/p/w500/iuFNMS8vlbhzY9SnDY1c71AXQRV.jpg", tagline: "She's Everything. He's Just Ken.", color: "#e91e8c" },
-          { title: "The Matrix", year: "1999", genre: "Sci-Fi · Action", rating: "8.7", poster: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg", tagline: "Free Your Mind", color: "#003300" },
-          { title: "Inception", year: "2010", genre: "Thriller · Sci-Fi", rating: "8.4", poster: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg", tagline: "Your Mind is the Scene of the Crime", color: "#0d1b3e" },
-          { title: "Goodfellas", year: "1990", genre: "Crime · Drama", rating: "8.7", poster: "https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg", tagline: "As Far Back as I Can Remember...", color: "#1a0a00" },
-          { title: "Casablanca", year: "1942", genre: "Drama · Romance", rating: "8.5", poster: "https://image.tmdb.org/t/p/w500/5K7cOHoay2mZusSLezBOY0Qxh8a.jpg", tagline: "Of all the gin joints...", color: "#2c1810" },
-          { title: "Dune", year: "2021", genre: "Epic · Sci-Fi", rating: "7.8", poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcKxYKqHmDTFYkJoaEkO.jpg", tagline: "Beyond Fear, Destiny Awaits", color: "#8B6914" }
-        ];
+<!-- ══════════ NAVIGATION ══════════ -->
+<nav id="nav">
+  <div class="nav-brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <!-- Real WB Shield SVG (2023 Centennial design) -->
+    <svg width="46" height="48" viewBox="0 0 200 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ng1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8c96a"/><stop offset="50%" stop-color="#C8A84B"/><stop offset="100%" stop-color="#9A7828"/></linearGradient>
+        <linearGradient id="ng2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a6b"/><stop offset="100%" stop-color="#0d2244"/></linearGradient>
+      </defs>
+      <path d="M100 4 L192 30 L192 110 Q192 175 100 206 Q8 175 8 110 L8 30 Z" fill="url(#ng1)"/>
+      <path d="M100 14 L182 37 L182 110 Q182 168 100 196 Q18 168 18 110 L18 37 Z" fill="url(#ng2)"/>
+      <path d="M18 86 L182 86 L182 118 L18 118 Z" fill="url(#ng1)" opacity="0.92"/>
+      <text x="100" y="109" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="18" fill="#0d2244" letter-spacing="0.5">WARNER BROS.</text>
+      <text x="100" y="80" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="46" fill="url(#ng1)" letter-spacing="-2">WB</text>
+      <path d="M40 128 Q100 158 160 128" stroke="url(#ng1)" stroke-width="1.5" fill="none" opacity="0.45"/>
+    </svg>
+    <div>
+      <div class="nav-brand-text-main">Warner Bros.</div>
+      <div class="nav-brand-text-sub">Entertainment · Est. 1923</div>
+    </div>
+  </div>
 
-        const STATS = [
-          { value: "102", label: "Years of Cinema", sub: "Est. April 4, 1923", icon: Award },
-          { value: "12,500+", label: "Films in Library", sub: "Variety · Centennial 2023", icon: Film },
-          { value: "220+", label: "Countries Reached", sub: "WBD Official", icon: Globe },
-          { value: "35,000", label: "Employees Worldwide", sub: "Macrotrends 2024", icon: Users }
-        ];
+  <div class="nav-links">
+    <a href="#films">Films</a>
+    <a href="#history">History</a>
+    <a href="#services">Divisions</a>
+    <a href="#leadership">Leadership</a>
+    <a href="#contact">Contact</a>
+    <button class="btn-gold cta-nav" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+      Partner With Us
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+</nav>
 
-        const WBShieldSVG = ({ size = 52 }) => (
-          <svg width={size} height={size * 1.05} viewBox="0 0 200 210" fill="none">
-            <path d="M100 4 L192 30 L192 110 Q192 175 100 206 Q8 175 8 110 L8 30 Z" fill="#C8A84B" />
-            <path d="M100 14 L182 37 L182 110 Q182 168 100 196 Q18 168 18 110 L18 37 Z" fill="#1a3a6b" />
-            <text x="100" y="110" textAnchor="middle" fontFamily="serif" fontWeight="900" fontSize="22" fill="#0d2244">WARNER BROS.</text>
-          </svg>
-        );
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <!-- Decorative rings -->
+  <div class="ring" style="width:min(400px,80vw);height:min(400px,80vw);border-color:rgba(200,168,75,0.07)"></div>
+  <div class="ring" style="width:min(640px,95vw);height:min(640px,95vw);border-color:rgba(200,168,75,0.05)"></div>
+  <div class="ring" style="width:min(900px,120vw);height:min(900px,120vw);border-color:rgba(200,168,75,0.03)"></div>
+  <div class="pulse-ring"></div>
 
-        /* --- COMPONENTS --- */
-        function FilmCard({ film, index }) {
-          const [hovered, setHovered] = useState(false);
-          return (
-            <div 
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-              className="relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500"
-              style={{ 
-                aspectRatio: '2/3', 
-                backgroundColor: film.color,
-                transform: hovered ? 'translateY(-10px) scale(1.02)' : 'none',
-                boxShadow: hovered ? '0 20px 40px rgba(0,0,0,0.6)' : 'none'
-              }}
-            >
-              <img src={film.poster} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent p-4 flex flex-col justify-end">
-                <p className="text-[10px] text-yellow-500 uppercase tracking-widest">{film.genre}</p>
-                <h3 className="font-bold text-sm leading-tight">{film.title}</h3>
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-[10px] opacity-60">{film.year}</span>
-                  <span className="text-[10px] text-yellow-500 flex items-center gap-1"><Star size={8} fill="currentColor"/> {film.rating}</span>
-                </div>
-              </div>
-            </div>
-          );
-        }
+  <div class="hero-badge anim-fade">
+    <span class="hero-badge-dot"></span>
+    Founded April 4, 1923 · Burbank, California · 102 Years of Cinema
+  </div>
 
-        /* --- MAIN APP --- */
-        function WarnerBrosWebsite() {
-          return (
-            <div className="min-h-screen text-[#eee8de] font-['Inter'] pb-20">
-              {/* Custom CSS classes for your design */}
-              <style>{`
-                .playfair { font-family: 'Playfair Display', serif; }
-                .gold-shimmer {
-                  background: linear-gradient(90deg, #9A7828 0%, #e8d080 50%, #9A7828 100%);
-                  background-size: 200% auto;
-                  -webkit-background-clip: text;
-                  -webkit-text-fill-color: transparent;
-                  animation: shimmer 5s linear infinite;
-                }
-                @keyframes shimmer { to { background-position: 200% center; } }
-              `}</style>
+  <h1 class="hero-h1 anim-fade1">A Century of</h1>
+  <span class="hero-h1-gold anim-fade2">Bold Storytelling</span>
 
-              {/* Navigation */}
-              <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-                <WBShieldSVG size={40} />
-                <button className="border border-[#C8A84B] px-5 py-1.5 text-xs gold-text hover:bg-[#C8A84B] hover:text-black transition uppercase tracking-widest">Partner With Us</button>
-              </nav>
+  <p class="hero-sub anim-fade3">
+    Warner Bros. Pictures was incorporated April 4, 1923 by Harry, Albert, Sam, and Jack Warner —
+    sons of a Polish immigrant who started with $150 and a single projector.
+    Today, one of Hollywood's "Big Five," home to 12,500+ films that have defined global culture.
+  </p>
 
-              {/* Hero */}
-              <header className="text-center py-20 px-4">
-                <p className="text-[10px] tracking-[0.4em] text-[#C8A84B] uppercase mb-4">A Global Legacy Since 1923</p>
-                <h1 className="text-5xl md:text-8xl font-black playfair mb-6 leading-tight">
-                  A Century of <br/><span className="italic gold-shimmer">Bold Storytelling</span>
-                </h1>
-                <p className="max-w-2xl mx-auto text-gray-400 italic text-sm md:text-base leading-relaxed opacity-80">
-                  "To produce and distribute blockbusters worldwide." For over a century, Warner Bros. has remained the vanguard of global culture.
-                </p>
-              </header>
+  <div class="hero-ctas anim-fade3">
+    <button class="btn-gold btn-hero-gold" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+      Partner With Us
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+    <a href="#films" class="btn-ghost">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg>
+      View Films
+    </a>
+  </div>
 
-              {/* Stats Section */}
-              <section className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto px-6 mb-24">
-                {STATS.map((stat, i) => (
-                  <div key={i} className="bg-white/5 border border-white/10 p-8 text-center rounded-sm hover:border-yellow-600/50 transition">
-                    <div className="text-3xl font-bold text-[#C8A84B] playfair">{stat.value}</div>
-                    <div className="text-[10px] tracking-widest uppercase mt-2 opacity-50">{stat.label}</div>
-                  </div>
-                ))}
-              </section>
+  <a href="#stats" class="scroll-hint">
+    Scroll
+    <div class="scroll-arrow">↓</div>
+  </a>
+</section>
 
-              {/* Films Grid */}
-              <section className="max-w-7xl mx-auto px-6">
-                <h2 className="text-2xl playfair italic mb-10 border-b border-white/10 pb-4">Iconic <span className="text-[#C8A84B]">Masterpieces</span></h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {FILMS.map((film, i) => (
-                    <FilmCard key={i} film={film} index={i} />
-                  ))}
-                </div>
-              </section>
+<!-- ══════════ STATS ══════════ -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-value">102</div>
+      <div class="stat-label">Years of Cinema</div>
+      <div class="stat-sub">Est. April 4, 1923</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-icon">🎬</div>
+      <div class="stat-value">12,500+</div>
+      <div class="stat-label">Films in Library</div>
+      <div class="stat-sub">Variety · Centennial 2023</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-icon">🌐</div>
+      <div class="stat-value">220+</div>
+      <div class="stat-label">Countries Reached</div>
+      <div class="stat-sub">WBD Official</div>
+    </div>
+    <div class="stat-cell" style="border-right:none">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">35,000</div>
+      <div class="stat-label">Employees Worldwide</div>
+      <div class="stat-sub">Macrotrends 2024</div>
+    </div>
+  </div>
+</section>
 
-              <footer className="text-center mt-32 opacity-30 text-[9px] tracking-[0.3em] uppercase">
-                © 2026 Warner Bros. Discovery — Global Partnership Portal
-              </footer>
-            </div>
-          );
-        }
+<!-- ══════════ FILMS ══════════ -->
+<section id="films" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Iconic Library</div>
+      <h2 class="section-title">12,500+ Films. <span>One Studio.</span></h2>
+      <p class="section-sub">From the first talkie to billion-dollar modern franchises — the WB catalog spans every genre, every generation.</p>
+    </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<WarnerBrosWebsite />);
-    </script>
+    <div class="films-grid" id="films-grid">
+      <!-- JS rendered -->
+    </div>
+
+    <div class="filmstrip" style="margin-top:44px">
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+      <div class="filmstrip-hole"></div><div class="filmstrip-hole"></div><div class="filmstrip-hole"></div>
+    </div>
+    <p class="note-text">★ Ratings from IMDb · Posters via TMDB · Dark Knight &amp; Inception: Legendary Pictures / WB · The Matrix: Village Roadshow / WB · Harry Potter (8 films): fully WB-produced</p>
+  </div>
+</section>
+
+<!-- ══════════ FOUNDERS ══════════ -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">The Warner Brothers</div>
+      <h2 class="section-title">Four Brothers. <span>One Empire.</span></h2>
+      <p class="section-sub">Sons of a Polish immigrant cobbler — Harry, Albert, Sam, and Jack Warner began with a projector and $150, and built the world's greatest entertainment studio.</p>
+    </div>
+
+    <div style="max-width:860px;margin:0 auto">
+      <div class="founder-tabs">
+        <button class="founder-tab active" data-founder="0">Harry Warner</button>
+        <button class="founder-tab" data-founder="1">Sam Warner</button>
+        <button class="founder-tab" data-founder="2">Jack L. Warner</button>
+      </div>
+
+      <div class="founder-panel active" data-panel="0">
+        <div class="founder-card">
+          <div class="founder-avatar">HW</div>
+          <div>
+            <div class="founder-name">Harry Warner</div>
+            <div class="founder-role">President · 1923–1956</div>
+            <div class="founder-born">b. 1881, Krasnosielc, Poland</div>
+            <p class="founder-bio">The eldest brother and company president, Harry ran New York headquarters overseeing finance and distribution. He championed the studio's founding motto: "Pictures that educate, enlighten and entertain." His business acumen funded Sam's technological gambles and built the studio's financial foundation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder-panel" data-panel="1">
+        <div class="founder-card">
+          <div class="founder-avatar">SW</div>
+          <div>
+            <div class="founder-name">Sam Warner</div>
+            <div class="founder-role">Technology Visionary</div>
+            <div class="founder-born">b. 1887, Krasnosielc, Poland</div>
+            <p class="founder-bio">Sam championed Vitaphone synchronized-sound technology, producing The Jazz Singer (1927) — the first major talking picture. He convinced his skeptical brothers to bet the studio on it, and won. Heartbreakingly, Sam died of a cerebral hemorrhage the night before its premiere, never witnessing the revolution he created.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder-panel" data-panel="2">
+        <div class="founder-card">
+          <div class="founder-avatar">JW</div>
+          <div>
+            <div class="founder-name">Jack L. Warner</div>
+            <div class="founder-role">Head of Production · 1923–1967</div>
+            <div class="founder-born">b. 1892, London, Ontario, Canada</div>
+            <p class="founder-bio">The Hollywood showman, Jack signed Humphrey Bogart, Bette Davis, Errol Flynn, and James Cagney. He led the studio through its golden era, introduced television production in 1955 with Cheyenne for ABC, and held creative control until the studio's 1967 sale to Seven Arts Productions.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="note-text" style="margin-top:20px">Albert (Abe) Warner (b. 1884, Krasnosielc, Poland) — Co-Founder &amp; Treasurer — oversaw all distribution and sales from New York City.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TIMELINE ══════════ -->
+<section id="history" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Timeline</div>
+      <h2 class="section-title">102 Years of <span>History</span></h2>
+      <p class="section-sub">Select a year to explore verified milestones from over a century of cinematic innovation.</p>
+    </div>
+
+    <div class="milestone-btns">
+      <button class="milestone-btn" data-ms="0">1903</button>
+      <button class="milestone-btn" data-ms="1">1923</button>
+      <button class="milestone-btn" data-ms="2">1927</button>
+      <button class="milestone-btn" data-ms="3">1942</button>
+      <button class="milestone-btn" data-ms="4">1955</button>
+      <button class="milestone-btn" data-ms="5">1990</button>
+      <button class="milestone-btn" data-ms="6">2001</button>
+      <button class="milestone-btn" data-ms="7">2022</button>
+      <button class="milestone-btn active" data-ms="8">2023</button>
+    </div>
+
+    <div class="milestone-panel" data-msp="0"><div class="milestone-card"><div class="milestone-year">1903</div><p class="milestone-event">The brothers open the Cascade — their first movie theater — in New Castle, Pennsylvania, with $150 and a single projector showing The Great Train Robbery.</p></div></div>
+    <div class="milestone-panel" data-msp="1"><div class="milestone-card"><div class="milestone-year">1923</div><p class="milestone-event">Warner Bros. Pictures, Inc. is officially incorporated on April 4, 1923, in Burbank, California, by Harry, Albert, Sam, and Jack Warner.</p></div></div>
+    <div class="milestone-panel" data-msp="2"><div class="milestone-card"><div class="milestone-year">1927</div><p class="milestone-event">The Jazz Singer — the first feature-length talking picture — premieres. Sam Warner dies the night before, never witnessing the revolution he created.</p></div></div>
+    <div class="milestone-panel" data-msp="3"><div class="milestone-card"><div class="milestone-year">1942</div><p class="milestone-event">Casablanca premieres. It wins Best Picture at the Academy Awards and becomes one of the greatest films ever made.</p></div></div>
+    <div class="milestone-panel" data-msp="4"><div class="milestone-card"><div class="milestone-year">1955</div><p class="milestone-event">Warner Bros. Television launches Cheyenne for ABC — television's first hour-long Western — pivoting the studio into the TV era.</p></div></div>
+    <div class="milestone-panel" data-msp="5"><div class="milestone-card"><div class="milestone-year">1990</div><p class="milestone-event">Warner Communications merges with Time Inc. forming Time Warner — the world's largest media company at the time.</p></div></div>
+    <div class="milestone-panel" data-msp="6"><div class="milestone-card"><div class="milestone-year">2001</div><p class="milestone-event">Harry Potter and the Sorcerer's Stone launches the highest-grossing film series in history (not adjusted for inflation).</p></div></div>
+    <div class="milestone-panel" data-msp="7"><div class="milestone-card"><div class="milestone-year">2022</div><p class="milestone-event">Warner Bros. Discovery formed April 8 after the $43B AT&amp;T WarnerMedia–Discovery merger. David Zaslav becomes President &amp; CEO.</p></div></div>
+    <div class="milestone-panel active" data-msp="8"><div class="milestone-card"><div class="milestone-year">2023</div><p class="milestone-event">Warner Bros. celebrates 100 years. Barbie (2023) directed by Greta Gerwig crosses $1.4 billion worldwide — one of WB's all-time highest-grossing films ever.</p></div></div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section id="services" class="section section-alt">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Business Divisions</div>
+      <h2 class="section-title">The Full Entertainment <span>Spectrum</span></h2>
+      <p class="section-sub">Warner Bros. Discovery (Nasdaq: WBD) operates across film, streaming, cable networks, gaming, DC, and animation — 220+ countries.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon-wrap">🎬</div>
+        <div class="service-title">Warner Bros. Pictures</div>
+        <p class="service-desc">One of Hollywood's Big Five studios — home to New Line Cinema, DC Studios, and WB Pictures Animation. Producing blockbusters since 1923.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">📺</div>
+        <div class="service-title">Max Streaming</div>
+        <p class="service-desc">HBO Max (name restored 2025) delivers premium HBO originals, Discovery content, and WB films to 116M+ subscribers globally.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">🌍</div>
+        <div class="service-title">Global Networks</div>
+        <p class="service-desc">CNN, TNT, TBS, HGTV, Food Network, Discovery Channel, Eurosport — 220+ countries and territories worldwide.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">🎮</div>
+        <div class="service-title">Warner Bros. Games</div>
+        <p class="service-desc">Batman: Arkham, Mortal Kombat, Hogwarts Legacy, and LEGO franchise — iconic interactive entertainment beloved worldwide.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">🦸</div>
+        <div class="service-title">DC Studios</div>
+        <p class="service-desc">Superman, Batman, Wonder Woman and the full DC Universe — film, TV, animation, and DC Comics, a WB subsidiary since 1969.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon-wrap">🐰</div>
+        <div class="service-title">WB Animation</div>
+        <p class="service-desc">Looney Tunes, Cartoon Network, Scooby-Doo, Tom &amp; Jerry — 90+ years of beloved animated characters. Bugs Bunny is the official WB mascot.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LEADERSHIP ══════════ -->
+<section id="leadership" class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Current Leadership</div>
+      <h2 class="section-title">Steering the <span>Next Century</span></h2>
+    </div>
+    <div class="leadership-card">
+      <div class="leadership-left">
+        <!-- WB Shield -->
+        <svg width="70" height="74" viewBox="0 0 200 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8c96a"/><stop offset="50%" stop-color="#C8A84B"/><stop offset="100%" stop-color="#9A7828"/></linearGradient>
+            <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a6b"/><stop offset="100%" stop-color="#0d2244"/></linearGradient>
+          </defs>
+          <path d="M100 4 L192 30 L192 110 Q192 175 100 206 Q8 175 8 110 L8 30 Z" fill="url(#lg1)"/>
+          <path d="M100 14 L182 37 L182 110 Q182 168 100 196 Q18 168 18 110 L18 37 Z" fill="url(#lg2)"/>
+          <path d="M18 86 L182 86 L182 118 L18 118 Z" fill="url(#lg1)" opacity="0.92"/>
+          <text x="100" y="109" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="18" fill="#0d2244" letter-spacing="0.5">WARNER BROS.</text>
+          <text x="100" y="80" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="46" fill="url(#lg1)" letter-spacing="-2">WB</text>
+          <path d="M40 128 Q100 158 160 128" stroke="url(#lg1)" stroke-width="1.5" fill="none" opacity="0.45"/>
+        </svg>
+        <div class="leadership-avatar">DZ</div>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <div class="leadership-name">
+          David Zaslav
+          <span class="leadership-badge">Nasdaq: WBD</span>
+        </div>
+        <div class="leadership-role">President &amp; CEO, Warner Bros. Discovery · Since April 8, 2022</div>
+        <p class="leadership-bio">Zaslav led the $43 billion merger of AT&amp;T's WarnerMedia and Discovery, Inc., creating Warner Bros. Discovery on April 8, 2022. He oversees Warner Bros. Pictures, HBO &amp; Max, CNN, TNT, TBS, HGTV, Food Network, Discovery Channel, TNT Sports, Eurosport, WB Animation, and DC Studios — reaching 220+ countries. Previously CEO of Discovery, Inc. from 2006.</p>
+        <p class="leadership-src">Source: wbd.com · Wikipedia · Variety (April 2022)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" class="section">
+  <div class="section-inner">
+    <div class="form-wrap">
+      <div class="section-header">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-title">Partner With <span>Warner Bros.</span></h2>
+        <p class="section-sub" style="max-width:480px">Ready to bring your story to the world? Our partnership team responds within 24 hours.</p>
+      </div>
+
+      <div class="form-box" id="form-box">
+        <div>
+          <label class="form-label">Full Name</label>
+          <div class="form-field-wrap">
+            <span class="form-icon">👤</span>
+            <input type="text" class="form-input" id="f-name" placeholder="Your full name" required />
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Email Address</label>
+          <div class="form-field-wrap">
+            <span class="form-icon">✉️</span>
+            <input type="email" class="form-input" id="f-email" placeholder="you@company.com" required />
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Phone (optional)</label>
+          <div class="form-field-wrap">
+            <span class="form-icon">📞</span>
+            <input type="tel" class="form-input" id="f-phone" placeholder="+1 (555) 000-0000" />
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Your Message</label>
+          <textarea class="form-textarea" id="f-msg" placeholder="Tell us about your project or partnership idea..." required></textarea>
+        </div>
+        <button class="btn-gold form-submit" onclick="submitForm()">
+          Send Message
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <div class="success-box" id="success-box">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Message Received!</div>
+        <p class="success-sub">Our partnerships team will be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <svg width="36" height="38" viewBox="0 0 200 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8c96a"/><stop offset="100%" stop-color="#9A7828"/></linearGradient>
+          <linearGradient id="fg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a6b"/><stop offset="100%" stop-color="#0d2244"/></linearGradient>
+        </defs>
+        <path d="M100 4 L192 30 L192 110 Q192 175 100 206 Q8 175 8 110 L8 30 Z" fill="url(#fg1)"/>
+        <path d="M100 14 L182 37 L182 110 Q182 168 100 196 Q18 168 18 110 L18 37 Z" fill="url(#fg2)"/>
+        <path d="M18 86 L182 86 L182 118 L18 118 Z" fill="url(#fg1)" opacity="0.9"/>
+        <text x="100" y="108" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="16" fill="#0d2244">WARNER BROS.</text>
+        <text x="100" y="79" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="44" fill="url(#fg1)" letter-spacing="-2">WB</text>
+      </svg>
+      <div>
+        <div class="footer-brand-name">Warner Bros. Entertainment Inc.</div>
+        <div class="footer-brand-sub">A Warner Bros. Discovery Company · Burbank, California</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <span>Privacy</span><span>Terms</span><span>Careers</span><span>Press</span><span>Investor Relations</span>
+    </div>
+  </div>
+  <div class="footer-divider">
+    <p class="footer-copy">Warner Bros. Pictures, Inc. was incorporated April 4, 1923, by Harry Warner, Albert Warner, Sam Warner, and Jack L. Warner. Warner Bros. Discovery, Inc. (Nasdaq: WBD) formed April 8, 2022. HQ: 230 Park Avenue South, New York City &amp; Warner Bros. Studios, 4000 Warner Blvd, Burbank, CA 91522. © 2026 Warner Bros. Entertainment Inc. All rights reserved. The WB shield logo and all related characters are trademarks of and © Warner Bros. Entertainment Inc. Movie poster images © their respective studios, displayed via TMDB for editorial reference.</p>
+  </div>
+</footer>
+
+<!-- ══════════ MOBILE STICKY ══════════ -->
+<div id="mobile-cta">
+  <button class="btn-gold" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+    Partner With Warner Bros.
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+</div>
+
+<script>
+/* ── FILM DATA ── */
+const FILMS = [
+  { title:"Harry Potter and the Sorcerer's Stone", year:"2001", genre:"Fantasy", rating:"7.9", poster:"https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg", tagline:"Let the Magic Begin", bg:"#740001" },
+  { title:"The Dark Knight", year:"2008", genre:"Action · Crime", rating:"9.0", poster:"https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", tagline:"Why So Serious?", bg:"#1a1a2e" },
+  { title:"Barbie", year:"2023", genre:"Comedy · Fantasy", rating:"7.1", poster:"https://image.tmdb.org/t/p/w500/iuFNMS8vlbhzY9SnDY1c71AXQRV.jpg", tagline:"She's Everything. He's Just Ken.", bg:"#e91e8c" },
+  { title:"The Matrix", year:"1999", genre:"Sci-Fi · Action", rating:"8.7", poster:"https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg", tagline:"Free Your Mind", bg:"#003300" },
+  { title:"Inception", year:"2010", genre:"Thriller · Sci-Fi", rating:"8.4", poster:"https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg", tagline:"Your Mind is the Scene of the Crime", bg:"#0d1b3e" },
+  { title:"Goodfellas", year:"1990", genre:"Crime · Drama", rating:"8.7", poster:"https://image.tmdb.org/t/p/w500/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg", tagline:"As Far Back as I Can Remember...", bg:"#1a0a00" },
+  { title:"Casablanca", year:"1942", genre:"Drama · Romance", rating:"8.5", poster:"https://image.tmdb.org/t/p/w500/5K7cOHoay2mZusSLezBOY0Qxh8a.jpg", tagline:"Of all the gin joints in all the towns...", bg:"#2c1810" },
+  { title:"Dune", year:"2021", genre:"Epic · Sci-Fi", rating:"7.8", poster:"https://image.tmdb.org/t/p/w500/d5NXSklpcKxYKqHmDTFYkJoaEkO.jpg", tagline:"Beyond Fear, Destiny Awaits", bg:"#8B6914" },
+];
+
+/* ── RENDER FILMS ── */
+const grid = document.getElementById('films-grid');
+FILMS.forEach(f => {
+  const card = document.createElement('div');
+  card.className = 'film-card';
+  card.style.background = f.bg;
+  card.innerHTML = `
+    <img src="${f.poster}" alt="${f.title}" loading="lazy"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <div class="film-fallback" style="display:none;background:linear-gradient(160deg,${f.bg},#000)">
+      <div style="font-size:36px;margin-bottom:12px">🎬</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.3">${f.title}</div>
+    </div>
+    <div class="film-overlay">
+      <div class="film-genre">${f.genre}</div>
+      <div class="film-title">${f.title}</div>
+      <div class="film-meta">
+        <span class="film-year">${f.year}</span>
+        <span class="film-rating">⭐ ${f.rating}</span>
+      </div>
+    </div>
+    <div class="film-hover-overlay">
+      <div class="film-play-btn">▶</div>
+      <div class="film-hover-title">${f.title}</div>
+      <div class="film-hover-tag">"${f.tagline}"</div>
+    </div>`;
+  grid.appendChild(card);
+});
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+/* ── FOUNDER TABS ── */
+document.querySelectorAll('.founder-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const idx = btn.dataset.founder;
+    document.querySelectorAll('.founder-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.founder-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`.founder-panel[data-panel="${idx}"]`).classList.add('active');
+  });
+});
+
+/* ── MILESTONE TABS ── */
+document.querySelectorAll('.milestone-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const idx = btn.dataset.ms;
+    document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.milestone-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`.milestone-panel[data-msp="${idx}"]`).classList.add('active');
+  });
+});
+
+/* ── FORM SUBMIT ── */
+function submitForm() {
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const msg   = document.getElementById('f-msg').value.trim();
+  if (!name || !email || !msg) { alert('Please fill in all required fields.'); return; }
+  document.getElementById('form-box').style.display = 'none';
+  const sb = document.getElementById('success-box');
+  sb.style.display = 'block';
+}
+
+/* ── INTERSECTION OBSERVER (animate on scroll) ── */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.animationPlayState = 'running';
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.film-card').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.animation = `cardIn 0.6s ${i * 0.07}s ease both`;
+  el.style.animationPlayState = 'paused';
+  io.observe(el);
+});
+</script>
 </body>
 </html>
